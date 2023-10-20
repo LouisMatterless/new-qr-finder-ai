@@ -152,3 +152,8 @@ cython_debug/
 transformed_image.jpg
 test_qr_codes
 test_dataset
+model.h5
+loss.png
+debug_truth.jpg
+debug_input.jpg
+dataset
