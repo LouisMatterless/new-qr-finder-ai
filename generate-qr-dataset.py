@@ -103,19 +103,22 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                 
                 # Adjust transparency of QR code
                 datas = qr.getdata()
-                new_data = []
-                for item in datas:
-                    if isinstance(item, tuple):  # Ensure the item is a tuple
-                        if item[0] in list(range(200, 256)):
-                            new_data.append((255, 255, 255, 0))  # fully transparent
-                        else:
-                            new_data.append((0, 0, 0, 128))  # half transparent
-                    else:  # if it's a grayscale image or single channel
-                        if item in list(range(200, 256)):
-                            new_data.append(0)  # fully transparent
-                        else:
-                            new_data.append(128)  # half transparent
-                qr.putdata(new_data)
+                # new_data = []
+                # for item in datas:
+                #     if isinstance(item, tuple):  # Ensure the item is a tuple
+                #         # if item[3] in list(range(0, 0)): # transparent stays transparent
+                #         #     new_data.append((255, 255, 255, 0))  # fully transparent
+                #         if item[0] in list(range(200, 256)):
+                #             new_data.append((255, 255, 255, 0))  # fully transparent
+                #         else:
+                #             new_data.append((0, 0, 0, 128))  # half transparent
+                #     else:  # not used
+                #         if item in list(range(200, 256)):
+                #             new_data.append(0)  # fully transparent
+                #         else:
+                #             new_data.append(128)  # half transparent
+                # qr.putdata(new_data)
+                qr.save(out_folder + "/" + str(generate_unique_hash()) + ".png")
                 
                 # Paste QR (don't paste close to edge, 20% of image size)
                 w = img.size[0]
