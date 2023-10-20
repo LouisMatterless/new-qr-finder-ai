@@ -122,9 +122,9 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                         if item[3] in list(range(0, 1)): # transparent stays transparent
                             new_data.append((255, 255, 255, 0))  # fully transparent
                         elif item[0] in list(range(200, 256)):
-                            new_data.append((255, 255, 255, 0))  # fully transparent
+                            new_data.append((255, 255, 255, 64))  # 1/4 transparent
                         else:
-                            new_data.append((0, 0, 0, 128))  # half transparent
+                            new_data.append((0, 0, 0, 128+32))  # more solid
                     else:  # not used
                         if item in list(range(200, 256)):
                             new_data.append(0)  # fully transparent
