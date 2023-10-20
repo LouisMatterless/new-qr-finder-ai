@@ -1,0 +1,7 @@
+Pillow
+matplotlib
+numpy
+tensorflow
+opencv-python
+qrcode
+tqdm
