@@ -7,19 +7,19 @@ This document outlines the steps to create, activate, install packages, and deac
 1. Navigate to the project directory in your terminal.
 2. Run the following command to create a virtual environment in the current directory:
 ```bash
-python3 -m venv .
+python3 -m venv venv
 ```
 
 ## Activating the Virtual Environment
 
 ### On Windows:
 ```bash
-.\Scripts\activate
+.\venv\Scripts\activate
 ```
 
 ### On macOS and Linux:
 ```bash
-source bin/activate
+source venv/bin/activate
 ```
 
 You should now see the name of your virtual environment in the command prompt.
