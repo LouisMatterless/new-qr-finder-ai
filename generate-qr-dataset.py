@@ -16,6 +16,24 @@ import shutil
 from PIL import Image, ImageDraw
 from tqdm import tqdm
 
+import hashlib
+from datetime import datetime
+
+# Function to create a unique hash based on the current timestamp
+def generate_unique_hash():
+    current_time = str(datetime.now()).encode('utf-8')
+    new_hash = hashlib.md5(current_time).hexdigest()[:10]
+    return new_hash
+
+# Generate a unique hash for the folder name
+unique_hash = generate_unique_hash()
+base_output_folder = "output-" + unique_hash
+
+# Modify the paths to be inside the new output folder
+def adjusted_path(original_path):
+    return os.path.join(base_output_folder, original_path)
+
+
 # 10 words
 qr_random_words_1 = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "grey"]
 qr_random_words_2 = ["jumping", "running", "walking", "sitting", "standing", "sleeping", "eating", "drinking",
@@ -198,15 +216,26 @@ transformed_image = cv2.circle(transformed_image, (round(new_center[0]), round(n
 cv2.imwrite('transformed_image.jpg', transformed_image)
 print("Transformed size: " + str(transformed_image.shape) + ", center: " + str(new_center))
 
+# Adjust paths for the test folders
+test_qr_folder = adjusted_path("test_qr_codes")
+test_dataset_folder = adjusted_path("test_dataset")
+
 # Delete old folders
-if os.path.exists("test_qr_codes"):
-    shutil.rmtree("test_qr_codes")
-if os.path.exists("test_dataset"):
-    shutil.rmtree("test_dataset")
+if os.path.exists(test_qr_folder):
+    shutil.rmtree(test_qr_folder)
+if os.path.exists(test_dataset_folder):
+    shutil.rmtree(test_dataset_folder)
+
+# Create the base output folder if it doesn't exist
+if not os.path.exists(base_output_folder):
+    os.mkdir(base_output_folder)
 
 # Create output folders
-os.mkdir("test_qr_codes")
-os.mkdir("test_dataset")
+os.mkdir(test_qr_folder)
+os.mkdir(test_dataset_folder)
+
 
 generate_qr_images("test_qr_codes", 100, 10//2)
 generate_dataset("test_dataset", "photos", "test_qr_codes", 100, (1920//2, 1080//2), 3)
+
+print("output created in: " + base_output_folder)
