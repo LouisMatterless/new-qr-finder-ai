@@ -206,14 +206,14 @@ def load_and_transform_qr(imgpath):
     return random_transform(image, center)
 
 
-test_qr_imgpath = 'qr_code_test.png'
+test_qr_imgpath = adjusted_path("qr_code_test.png")
 transformed_image, new_center = load_and_transform_qr(test_qr_imgpath)
 # make image center green
 transformed_image = cv2.circle(transformed_image, (transformed_image.shape[1] // 2, transformed_image.shape[0] // 2), 4,
                                (0, 255, 0, 255), -1)
 # make new center red
 transformed_image = cv2.circle(transformed_image, (round(new_center[0]), round(new_center[1])), 3, (0, 0, 255, 255), -1)
-cv2.imwrite('transformed_image.jpg', transformed_image)
+cv2.imwrite(adjusted_path('transformed_image.jpg'), transformed_image)
 print("Transformed size: " + str(transformed_image.shape) + ", center: " + str(new_center))
 
 # Adjust paths for the test folders
@@ -235,7 +235,7 @@ os.mkdir(test_qr_folder)
 os.mkdir(test_dataset_folder)
 
 
-generate_qr_images("test_qr_codes", 100, 10//2)
-generate_dataset("test_dataset", "photos", "test_qr_codes", 100, (1920//2, 1080//2), 3)
+generate_qr_images(test_qr_folder, 100, 10//2)
+generate_dataset(test_dataset_folder, "photos", test_qr_folder, 100, (1920//2, 1080//2), 3)
 
 print("output created in: " + base_output_folder)
