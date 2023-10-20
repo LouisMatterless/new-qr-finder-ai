@@ -1,4 +1,6 @@
 import os
+import sys
+
 
 from PIL import Image
 from matplotlib import pyplot as plt
@@ -7,13 +9,28 @@ from qr_ai_dataset import load_dataset
 import tensorflow as tf
 from qr_ai_helpers import weighted_mse, avg_pred
 
-inputs, truths = load_dataset("test_dataset", max_data_count=25, downsample=False)
+
+# Check for command-line arguments
+if len(sys.argv) > 1:
+    unique_hash = sys.argv[1]
+else:
+    unique_hash = input("Please enter the hash of the output folder: ")
+
+base_output_folder = "outputs/output-" + unique_hash
+
+# Modify the paths to use the provided hash
+dataset_folder_path = os.path.join(base_output_folder, "test_dataset")
+
+def adjusted_path(original_path):
+    return os.path.join(base_output_folder, original_path)
+
+inputs, truths = load_dataset(dataset_folder_path, max_data_count=25, downsample=False)
 
 print("Inputs shape: " + str(inputs.shape))
 print("Truths shape: " + str(truths.shape))
 
 # load trained model
-model = tf.keras.models.load_model("model.h5", custom_objects={"weighted_mse": weighted_mse, "avg_pred": avg_pred})
+model = tf.keras.models.load_model(adjusted_path("model.h5"), custom_objects={"weighted_mse": weighted_mse, "avg_pred": avg_pred})
 
 
 def fit_image_into_size(img, size):
