@@ -62,7 +62,7 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
             qr_files = random.sample(qr_files, num_qr)
 
             # Get random photo
-            photo_file = random.choice(os.listdir(photo_folder))
+            photo_file = random.choice([f for f in os.listdir(photo_folder) if f != '.DS_Store'])
             photo = Image.open(photo_folder + "/" + photo_file)
             # Apply random perspective transformation and a random zoomed in crop (keeping same resolution)
             cropped_width = random.randint(photo.size[0] // 2, photo.size[0])
