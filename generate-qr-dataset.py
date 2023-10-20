@@ -27,7 +27,7 @@ def generate_unique_hash():
 
 # Generate a unique hash for the folder name
 unique_hash = generate_unique_hash()
-base_output_folder = "output-" + unique_hash
+base_output_folder = "outputs/output-" + unique_hash
 
 # Modify the paths to be inside the new output folder
 def adjusted_path(original_path):
@@ -206,7 +206,7 @@ def load_and_transform_qr(imgpath):
     return random_transform(image, center)
 
 
-test_qr_imgpath = adjusted_path("qr_code_test.png")
+test_qr_imgpath = "qr_code_test.png"
 transformed_image, new_center = load_and_transform_qr(test_qr_imgpath)
 # make image center green
 transformed_image = cv2.circle(transformed_image, (transformed_image.shape[1] // 2, transformed_image.shape[0] // 2), 4,
@@ -226,7 +226,11 @@ if os.path.exists(test_qr_folder):
 if os.path.exists(test_dataset_folder):
     shutil.rmtree(test_dataset_folder)
 
+
+
 # Create the base output folder if it doesn't exist
+if not os.path.exists("outputs"):
+    os.mkdir("outputs")
 if not os.path.exists(base_output_folder):
     os.mkdir(base_output_folder)
 
