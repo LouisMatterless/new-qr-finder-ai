@@ -131,7 +131,9 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                         else:
                             new_data.append(128)  # half transparent
                 qr.putdata(new_data)
-                qr.save(out_folder + "/" + str(generate_unique_hash()) + ".png")
+
+                # for debug
+                # qr.save(out_folder + "/" + str(generate_unique_hash()) + ".png")
                 
                 # Paste QR (don't paste close to edge, 20% of image size)
                 w = img.size[0]
