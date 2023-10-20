@@ -100,6 +100,23 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                 # Get random QR
                 qr_cv2, center_of_qr = load_and_transform_qr(qr_folder + "/" + qr_file)
                 qr = Image.fromarray(qr_cv2)
+                
+                # Adjust transparency of QR code
+                datas = qr.getdata()
+                new_data = []
+                for item in datas:
+                    if isinstance(item, tuple):  # Ensure the item is a tuple
+                        if item[0] in list(range(200, 256)):
+                            new_data.append((255, 255, 255, 0))  # fully transparent
+                        else:
+                            new_data.append((0, 0, 0, 128))  # half transparent
+                    else:  # if it's a grayscale image or single channel
+                        if item in list(range(200, 256)):
+                            new_data.append(0)  # fully transparent
+                        else:
+                            new_data.append(128)  # half transparent
+                qr.putdata(new_data)
+                
                 # Paste QR (don't paste close to edge, 20% of image size)
                 w = img.size[0]
                 h = img.size[1]
