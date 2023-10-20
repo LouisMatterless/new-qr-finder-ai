@@ -61,6 +61,19 @@ def generate_qr_images(folder, num_images, qr_size):
         qr.make(fit=True)
 
         img = qr.make_image(fill_color="black", back_color="white")
+
+        # Convert to RGBA and make white parts transparent
+        img = img.convert("RGBA")
+        datas = img.getdata()
+        new_data = []
+        for item in datas:
+            # Check if the pixel is white
+            if item[0] == 255 and item[1] == 255 and item[2] == 255:
+                new_data.append((255, 255, 255, 0))
+            else:
+                new_data.append(item)
+        img.putdata(new_data)
+
         img.save(folder + "/" + str(i) + ".png")
 
 
