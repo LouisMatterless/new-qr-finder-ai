@@ -27,7 +27,7 @@ def fit_image_into_size(img, size):
     if scale > 1:
         # don't scale up
         return img
-    img = img.resize((int(img.size[0] * scale), int(img.size[1] * scale)), Image.ANTIALIAS)
+    img = img.resize((int(img.size[0] * scale), int(img.size[1] * scale)), Image.BILINEAR)
     img = img.crop((0, 0, size[0], size[1]))  # Crop to box
     return img
 
