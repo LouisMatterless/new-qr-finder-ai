@@ -74,7 +74,7 @@ def generate_qr_images(folder, num_images, qr_size):
                 new_data.append(item)
         img.putdata(new_data)
 
-        img.save(folder + "/" + str(i) + ".png")
+        img.save(folder + "/" + str(i) + ".png", "PNG")
 
 
 def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size, max_qr_per_image):
