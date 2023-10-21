@@ -84,7 +84,7 @@ print(tf.config.list_physical_devices('GPU'))
 # Simply speaking, high precision means low false positive rate, and high recall means low false negative rate
 
 metrics = [Precision(), Recall(), avg_pred]
-optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.00003)
+optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0003)
 #optimizer = tf.keras.optimizers.legacy.RMSprop(learning_rate=0.00003)
 #loss = tf.keras.losses.MeanSquaredError()
 
@@ -125,7 +125,7 @@ print("Truths std: " + str(np.std(truths)))
 print("Truths max: " + str(np.max(truths)))
 print("Truths min: " + str(np.min(truths)))
 
-history = train_model(model, inputs, truths, epochs=500)
+history = train_model(model, inputs, truths, epochs=50)
 
 plt.plot(history.history['loss'], label='loss')
 plt.savefig(adjusted_path("loss.png"))
