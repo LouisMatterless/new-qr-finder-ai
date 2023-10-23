@@ -26,13 +26,25 @@ def adjusted_path(original_path):
     return os.path.join(base_output_folder, original_path)
 
 
+def Grayscale(x):
+    return tf.image.rgb_to_grayscale(x)
+
+def EdgeDetection(x):
+    sobel = tf.image.sobel_edges(x)
+    # Take the magnitude for combining the edges from both directions
+    magnitude = tf.sqrt(tf.reduce_sum(tf.square(sobel), axis=-1))
+    return magnitude
+
 def build_model(input_shape=(1920, 1080, 3)):
     inputs = tf.keras.Input(shape=input_shape)
 
-    x = inputs
+    # Convert to Grayscale
+    x = layers.Lambda(Grayscale)(inputs)
+    
+    # Edge Detection
+    x = layers.Lambda(EdgeDetection)(x)
 
     # Encoder
-    #x = layers.MaxPooling2D((2, 2), padding='same')(x)
 
     x = layers.Conv2D(16, (5, 5), activation='relu', padding='same')(x)
     x = layers.MaxPooling2D((2, 2), padding='same')(x)
@@ -84,7 +96,7 @@ print(tf.config.list_physical_devices('GPU'))
 # Simply speaking, high precision means low false positive rate, and high recall means low false negative rate
 
 metrics = [Precision(), Recall(), avg_pred]
-optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.0000075)
+optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.00003)
 #optimizer = tf.keras.optimizers.legacy.RMSprop(learning_rate=0.00003)
 #loss = tf.keras.losses.MeanSquaredError()
 
@@ -125,7 +137,7 @@ print("Truths std: " + str(np.std(truths)))
 print("Truths max: " + str(np.max(truths)))
 print("Truths min: " + str(np.min(truths)))
 
-history = train_model(model, inputs, truths, epochs=2000)
+history = train_model(model, inputs, truths, epochs=500)
 
 plt.plot(history.history['loss'], label='loss')
 plt.savefig(adjusted_path("loss.png"))
