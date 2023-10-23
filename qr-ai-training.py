@@ -44,21 +44,20 @@ def build_model(input_shape=(1920, 1080, 3)):
     # Edge Detection
     x = layers.Lambda(EdgeDetection)(x)
 
-    # Encoder
-
     x = layers.Conv2D(16, (5, 5), activation='relu', padding='same')(x)
-    x = layers.MaxPooling2D((2, 2), padding='same')(x)
+    x = layers.Conv2D(16, (3, 3), strides=(2, 2), activation='relu', padding='same')(x)  # Strided convolution
 
     x = layers.Conv2D(32, (7, 7), activation='relu', padding='same')(x)
-    x = layers.MaxPooling2D((2, 2), padding='same')(x)
+    x = layers.Conv2D(32, (3, 3), strides=(2, 2), activation='relu', padding='same')(x)  # Strided convolution
 
-    # Bottleneck
-    x = layers.Conv2D(32, (7, 7), activation='relu', padding='same')(x)
-    x = layers.Conv2D(32, (7, 7), activation='relu', padding='same')(x)
+    # Bottleneck using Dilated Convolutions
+    x = layers.Conv2D(32, (7, 7), dilation_rate=(2, 2), activation='relu', padding='same')(x)  # Dilated convolution
+    x = layers.Conv2D(32, (7, 7), dilation_rate=(2, 2), activation='relu', padding='same')(x)  # Dilated convolution
 
     # Decoder
     x = layers.Conv2DTranspose(32, (2, 2), strides=(2, 2), activation='relu', padding='same')(x)
     x = layers.Conv2D(32, (5, 5), activation='relu', padding='same')(x)
+
 
     x = layers.Conv2DTranspose(32, (2, 2), strides=(2, 2), activation='relu', padding='same')(x)
     x = layers.Conv2D(16, (5, 5), activation='relu', padding='same')(x)
@@ -97,7 +96,7 @@ print(tf.config.list_physical_devices('GPU'))
 
 metrics = [Precision(), Recall(), avg_pred]
 optimizer = tf.keras.optimizers.legacy.Adam(learning_rate=0.00003)
-#optimizer = tf.keras.optimizers.legacy.RMSprop(learning_rate=0.00003)
+#optimizer = tf.keras.optimizers.legacy.RMSprop(learning_rate=0.0003)
 #loss = tf.keras.losses.MeanSquaredError()
 
 # Test the custom loss function on first sample and input just zeroes as prediction
@@ -137,7 +136,7 @@ print("Truths std: " + str(np.std(truths)))
 print("Truths max: " + str(np.max(truths)))
 print("Truths min: " + str(np.min(truths)))
 
-history = train_model(model, inputs, truths, epochs=500)
+history = train_model(model, inputs, truths, epochs=50)
 
 plt.plot(history.history['loss'], label='loss')
 plt.savefig(adjusted_path("loss.png"))
