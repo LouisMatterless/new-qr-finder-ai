@@ -1,7 +1,7 @@
 import os
 from PIL import Image
 
-qr_folder = "outputs/output-transparentQR3/test_qr_codes"
+qr_folder = "outputs/output-transparentQR4/test_qr_codes"
 qr_files = [f for f in os.listdir(qr_folder) if f != '.DS_Store']
 
 for file in qr_files:

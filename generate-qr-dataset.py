@@ -129,7 +129,7 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                         if item[3] in list(range(0, 1)): # transparent stays transparent
                             new_data.append((255, 255, 255, 0))  # fully transparent
                         else:
-                            new_data.append((item[0], item[1], item[2], 255-item[0]//2)) # retain the anti-alising
+                            new_data.append((item[0], item[1], item[2], (255-item[0])//2)) # retain the anti-alising
                     else:  # not used
                         if item in list(range(200, 256)):
                             new_data.append(0)  # fully transparent
@@ -188,7 +188,7 @@ def random_transform(image, center):
     h, w, _ = image.shape
 
     # Random Scaling
-    scale_factor = np.random.uniform(1, 1)
+    scale_factor = np.random.uniform(0.5, 1)
 
     M_scale = np.array([[scale_factor, 0, 0], [0, scale_factor, 0], [0, 0, 1]])
     # Update to scale around center
