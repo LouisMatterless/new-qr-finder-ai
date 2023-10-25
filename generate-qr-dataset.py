@@ -33,6 +33,12 @@ base_output_folder = "outputs/output-" + unique_hash
 def adjusted_path(original_path):
     return os.path.join(base_output_folder, original_path)
 
+# Check for command-line arguments
+if len(sys.argv) > 1:
+    unique_hash = sys.argv[1]
+
+base_output_folder = "outputs/output-" + unique_hash
+
 
 # 10 words
 qr_random_words_1 = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "grey"]
@@ -89,7 +95,8 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
             num_qr = random.randint(1, max_qr_per_image)
 
             # Get random QRs to place
-            qr_files = os.listdir(qr_folder)
+            # qr_files = os.listdir(qr_folder)
+            qr_files = [f for f in os.listdir(qr_folder) if f != '.DS_Store']
             qr_files = random.sample(qr_files, num_qr)
 
             # Get random photo
@@ -121,10 +128,8 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                     if isinstance(item, tuple):  # Ensure the item is a tuple
                         if item[3] in list(range(0, 1)): # transparent stays transparent
                             new_data.append((255, 255, 255, 0))  # fully transparent
-                        elif item[0] in list(range(200, 256)):
-                            new_data.append((255, 255, 255, 0))  # fully transparent
                         else:
-                            new_data.append((0, 0, 0, 128))  # half transparent
+                            new_data.append((item[0], item[1], item[2], 255-item[0])) # retain the anti-alising
                     else:  # not used
                         if item in list(range(200, 256)):
                             new_data.append(0)  # fully transparent
@@ -224,6 +229,7 @@ def load_and_transform_qr(imgpath):
     # print("Loading and transforming QR code: " + imgpath)
     # Example Usage
     image = cv2.imread(imgpath)  # Load an image
+    print("loading file from " + imgpath)
 
     # Add alpha channel if needed
     if image.shape[2] == 3:
@@ -256,10 +262,10 @@ test_qr_folder = adjusted_path("test_qr_codes")
 test_dataset_folder = adjusted_path("test_dataset")
 
 # Delete old folders
-if os.path.exists(test_qr_folder):
-    shutil.rmtree(test_qr_folder)
-if os.path.exists(test_dataset_folder):
-    shutil.rmtree(test_dataset_folder)
+# if os.path.exists(test_qr_folder):
+#     shutil.rmtree(test_qr_folder)
+# if os.path.exists(test_dataset_folder):
+#     shutil.rmtree(test_dataset_folder)
 
 
 
@@ -270,11 +276,11 @@ if not os.path.exists(base_output_folder):
     os.mkdir(base_output_folder)
 
 # Create output folders
-os.mkdir(test_qr_folder)
+# os.mkdir(test_qr_folder)
 os.mkdir(test_dataset_folder)
 
 
-generate_qr_images(test_qr_folder, 100, 10//2)
-generate_dataset(test_dataset_folder, "photos", test_qr_folder, 100, (1920//2, 1080//2), 3)
+# generate_qr_images(test_qr_folder, 100, 10//2)
+generate_dataset(test_dataset_folder, "trainingImage", test_qr_folder, 100, (1920//2, 1080//2), 2)
 
 print("output created in: " + base_output_folder)
