@@ -51,5 +51,5 @@ def detect_qr_code(image_path: str) -> List[Tuple]:
 
 # Test the function
 if __name__ == "__main__":
-    detected_qrs = detect_qr_code('test_photos/bak/IMG_2340b.jpg')
+    detected_qrs = detect_qr_code('test_photos/bak/IMG_0169f.jpg')
     print(f"Detected QR codes: {detected_qrs}")
