@@ -74,7 +74,7 @@ def generate_qr_images(folder, num_images, qr_size):
                 new_data.append(item)
         img.putdata(new_data)
 
-        img.save(folder + "/" + str(i) + ".png")
+        img.save(folder + "/" + str(i) + ".png", "PNG")
 
 
 def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size, max_qr_per_image):
@@ -113,6 +113,28 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
                 # Get random QR
                 qr_cv2, center_of_qr = load_and_transform_qr(qr_folder + "/" + qr_file)
                 qr = Image.fromarray(qr_cv2)
+                
+                # Adjust transparency of QR code
+                datas = qr.getdata()
+                new_data = []
+                for item in datas:
+                    if isinstance(item, tuple):  # Ensure the item is a tuple
+                        if item[3] in list(range(0, 1)): # transparent stays transparent
+                            new_data.append((255, 255, 255, 0))  # fully transparent
+                        elif item[0] in list(range(200, 256)):
+                            new_data.append((255, 255, 255, 64))  # 1/4 transparent
+                        else:
+                            new_data.append((0, 0, 0, 128+32))  # more solid
+                    else:  # not used
+                        if item in list(range(200, 256)):
+                            new_data.append(0)  # fully transparent
+                        else:
+                            new_data.append(128)  # half transparent
+                qr.putdata(new_data)
+
+                # for debug
+                # qr.save(out_folder + "/" + str(generate_unique_hash()) + ".png")
+                
                 # Paste QR (don't paste close to edge, 20% of image size)
                 w = img.size[0]
                 h = img.size[1]
