@@ -74,7 +74,7 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
             num_qr = random.randint(1, max_qr_per_image)
 
             # Get random QRs to place
-            qr_files = os.listdir(qr_folder)
+            qr_files = [f for f in os.listdir(qr_folder) if f != '.DS_Store']
             qr_files = random.sample(qr_files, num_qr)
 
             # Get random photo
