@@ -19,29 +19,21 @@ from tqdm import tqdm
 import hashlib
 from datetime import datetime
 
-# Function to create a unique hash based on the current timestamp
-def generate_unique_hash():
-    current_time = str(datetime.now()).encode('utf-8')
-    new_hash = hashlib.md5(current_time).hexdigest()[:10]
-    return new_hash
-
 # Generate a unique hash for the folder name
-unique_hash = generate_unique_hash()
-base_output_folder = "outputs/output-" + unique_hash
+base_output_folder = "outputs/output-" + str(int(time.time()))
 
 # Modify the paths to be inside the new output folder
 def adjusted_path(original_path):
     return os.path.join(base_output_folder, original_path)
 
+def generate_qr_images(folder, num_images, qr_size):
 
 # 10 words
-qr_random_words_1 = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "grey"]
-qr_random_words_2 = ["jumping", "running", "walking", "sitting", "standing", "sleeping", "eating", "drinking",
-                     "playing", "flying"]
-qr_random_words_3 = ["cat", "dog", "bird", "fish", "mouse", "horse", "cow", "pig", "sheep", "goat"]
+    qr_random_words_1 = ["red", "blue", "green", "yellow", "orange", "purple", "pink", "black", "white", "grey"]
+    qr_random_words_2 = ["jumping", "running", "walking", "sitting", "standing", "sleeping", "eating", "drinking",
+                        "playing", "flying"]
+    qr_random_words_3 = ["cat", "dog", "bird", "fish", "mouse", "horse", "cow", "pig", "sheep", "goat"]
 
-
-def generate_qr_images(folder, num_images, qr_size):
     print("Generating QR codes...")
     for i in tqdm(range(num_images)):
         qr = qrcode.QRCode(
@@ -75,7 +67,6 @@ def generate_qr_images(folder, num_images, qr_size):
         img.putdata(new_data)
 
         img.save(folder + "/" + str(i) + ".png", "PNG")
-
 
 def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size, max_qr_per_image):
     print("Generating dataset...")
@@ -178,7 +169,6 @@ def generate_dataset(out_folder, photo_folder, qr_folder, num_images, image_size
             np.save(out_folder + "/" + str(i) + ".npy", centers_np)
             break
 
-
 def random_transform(image, center):
     h, w, _ = image.shape
 
@@ -240,17 +230,6 @@ def load_and_transform_qr(imgpath):
 
     return random_transform(image, center)
 
-
-test_qr_imgpath = "qr_code_test.png"
-transformed_image, new_center = load_and_transform_qr(test_qr_imgpath)
-# make image center green
-transformed_image = cv2.circle(transformed_image, (transformed_image.shape[1] // 2, transformed_image.shape[0] // 2), 4,
-                               (0, 255, 0, 255), -1)
-# make new center red
-transformed_image = cv2.circle(transformed_image, (round(new_center[0]), round(new_center[1])), 3, (0, 0, 255, 255), -1)
-cv2.imwrite(adjusted_path('transformed_image.jpg'), transformed_image)
-print("Transformed size: " + str(transformed_image.shape) + ", center: " + str(new_center))
-
 # Adjust paths for the test folders
 test_qr_folder = adjusted_path("test_qr_codes")
 test_dataset_folder = adjusted_path("test_dataset")
@@ -260,7 +239,6 @@ if os.path.exists(test_qr_folder):
     shutil.rmtree(test_qr_folder)
 if os.path.exists(test_dataset_folder):
     shutil.rmtree(test_dataset_folder)
-
 
 
 # Create the base output folder if it doesn't exist
