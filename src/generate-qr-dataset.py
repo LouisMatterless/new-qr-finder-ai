@@ -19,6 +19,8 @@ from tqdm import tqdm
 import hashlib
 from datetime import datetime
 
+from qr_ai_helpers import test_func
+
 # Generate a unique hash for the folder name
 base_output_folder = "outputs/output-" + str(int(time.time()))
 
@@ -229,6 +231,8 @@ def load_and_transform_qr(imgpath):
     center = (center[0] + padding, center[1] + padding)
 
     return random_transform(image, center)
+
+test_func()
 
 # Adjust paths for the test folders
 test_qr_folder = adjusted_path("test_qr_codes")
