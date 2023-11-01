@@ -2,6 +2,7 @@ import os
 import sys
 import tensorflow as tf
 import time
+import shutil
 
 
 def avg_pred(y_true, y_pred):
@@ -18,8 +19,8 @@ def get_base_output_folder(timestamp):
     return "outputs/output-" + str(timestamp)
 
 # Modify the paths to be inside the new output folder
-def adjusted_path(original_path, base_output_folder):
-    return os.path.join(base_output_folder, original_path)
+# def adjusted_path(base_output_folder, original_path):
+#     return os.path.join(base_output_folder, original_path)
 
 def prepare_base_output_folder():
     if len(sys.argv) > 1:
@@ -39,3 +40,13 @@ def prepare_base_output_folder():
 
     return timestamp
 
+def prepare_folder(timestamp, folderName, reset = False):
+    folderPath = os.path.join(get_base_output_folder(timestamp), folderName)
+
+    if reset and os.path.exists(folderPath):
+        shutil.rmtree(folderPath)
+
+    if not os.path.exists(folderPath):
+        os.mkdir(folderPath)
+    
+    return folderPath
