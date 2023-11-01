@@ -10,7 +10,6 @@ import numpy as np
 import cv2
 import qrcode
 import math
-import time
 import sys
 import shutil
 from PIL import Image, ImageDraw
@@ -18,15 +17,9 @@ from tqdm import tqdm
 
 import hashlib
 from datetime import datetime
+from qr_ai_helpers import adjusted_path, create_base_output_folder
 
-from qr_ai_helpers import test_func
 
-# Generate a unique hash for the folder name
-base_output_folder = "outputs/output-" + str(int(time.time()))
-
-# Modify the paths to be inside the new output folder
-def adjusted_path(original_path):
-    return os.path.join(base_output_folder, original_path)
 
 def generate_qr_images(folder, num_images, qr_size):
 
@@ -211,7 +204,6 @@ def random_transform(image, center):
 
     return transformed_image, (new_center[0], new_center[1])
 
-
 def load_and_transform_qr(imgpath):
     # print("Loading and transforming QR code: " + imgpath)
     # Example Usage
@@ -232,18 +224,17 @@ def load_and_transform_qr(imgpath):
 
     return random_transform(image, center)
 
-test_func()
+base_output_folder = create_base_output_folder()
 
 # Adjust paths for the test folders
-test_qr_folder = adjusted_path("test_qr_codes")
-test_dataset_folder = adjusted_path("test_dataset")
+test_qr_folder = adjusted_path("test_qr_codes", base_output_folder)
+test_dataset_folder = adjusted_path("test_dataset", base_output_folder)
 
 # Delete old folders
 if os.path.exists(test_qr_folder):
     shutil.rmtree(test_qr_folder)
 if os.path.exists(test_dataset_folder):
     shutil.rmtree(test_dataset_folder)
-
 
 # Create the base output folder if it doesn't exist
 if not os.path.exists("outputs"):
@@ -254,7 +245,6 @@ if not os.path.exists(base_output_folder):
 # Create output folders
 os.mkdir(test_qr_folder)
 os.mkdir(test_dataset_folder)
-
 
 generate_qr_images(test_qr_folder, 100, 10//2)
 generate_dataset(test_dataset_folder, "photos", test_qr_folder, 100, (1920//2, 1080//2), 3)
