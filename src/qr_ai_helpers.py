@@ -19,8 +19,8 @@ def get_base_output_folder(timestamp):
     return "outputs/output-" + str(timestamp)
 
 # Modify the paths to be inside the new output folder
-# def adjusted_path(base_output_folder, original_path):
-#     return os.path.join(base_output_folder, original_path)
+def adjusted_path(timestamp, original_path):
+    return os.path.join(get_base_output_folder(timestamp), original_path)
 
 def prepare_base_output_folder():
     if len(sys.argv) > 1:
@@ -28,7 +28,7 @@ def prepare_base_output_folder():
     else:
         timestamp = input("Please enter the hash of the output folder, system will generate one if it is empty: ")
     
-    if(timestamp is None):
+    if(not timestamp):
         timestamp = int(time.time())
     
     base_output_folder = get_base_output_folder(timestamp)

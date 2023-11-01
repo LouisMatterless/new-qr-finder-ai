@@ -9,21 +9,13 @@ from tensorflow.keras import layers, models
 from tensorflow.keras.metrics import Precision, Recall, AUC
 import matplotlib.pyplot as plt
 from qr_ai_dataset import load_dataset
-from qr_ai_helpers import weighted_mse, avg_pred
+from qr_ai_helpers import adjusted_path, get_base_output_folder, prepare_base_output_folder, weighted_mse, avg_pred
 
-# Check for command-line arguments
-if len(sys.argv) > 1:
-    unique_hash = sys.argv[1]
-else:
-    unique_hash = input("Please enter the hash of the output folder: ")
-
-base_output_folder = "outputs/output-" + unique_hash
+timestamp = prepare_base_output_folder()
+base_output_folder = get_base_output_folder(timestamp)
 
 # Modify the paths to use the provided hash
-dataset_folder_path = os.path.join(base_output_folder, "test_dataset")
-
-def adjusted_path(original_path):
-    return os.path.join(base_output_folder, original_path)
+dataset_folder_path = os.path.join(base_output_folder, "training_dataset")
 
 
 def build_model(input_shape=(1920, 1080, 3)):
@@ -95,11 +87,11 @@ print("Truths[0] number of ones: " + str(np.sum(truths[0])))
 # save as debug image
 pixels = np.array(truths[0] * 255)
 pixels = Image.fromarray(pixels.astype(np.uint8))
-pixels.save(adjusted_path("debug_truth.jpg"))
+pixels.save(adjusted_path(timestamp, "debug_truth.jpg"))
 
 pixels = np.array(inputs[0] * 255)
 pixels = Image.fromarray(pixels.astype(np.uint8))
-pixels.save(adjusted_path("debug_input.jpg"))
+pixels.save(adjusted_path(timestamp, "debug_input.jpg"))
 
 print("Truths[0] mean: " + str(np.mean(truths[0])))
 print("Truths[0] std: " + str(np.std(truths[0])))
@@ -128,7 +120,7 @@ print("Truths min: " + str(np.min(truths)))
 history = train_model(model, inputs, truths, epochs=500)
 
 plt.plot(history.history['loss'], label='loss')
-plt.savefig(adjusted_path("loss.png"))
+plt.savefig(adjusted_path(timestamp, "loss.png"))
 
 # Save model
-model.save(adjusted_path("model.h5"))
+model.save(adjusted_path(timestamp, "model.h5"))

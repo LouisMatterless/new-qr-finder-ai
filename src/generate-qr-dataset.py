@@ -226,11 +226,16 @@ def load_and_transform_qr(imgpath):
 timestamp = prepare_base_output_folder()
 base_output_folder = get_base_output_folder(timestamp)
 
-# Adjust paths for the test folders
+# create training data
+training_qr_folder = prepare_folder(timestamp, "training_qr_codes")
+training_dataset_folder = prepare_folder(timestamp, "training_dataset", True)
+generate_qr_images(training_qr_folder, 100, 10//2)
+generate_dataset(training_dataset_folder, "photos", training_qr_folder, 100, (1920//2, 1080//2), 3)
+
+# create test data
 test_qr_folder = prepare_folder(timestamp, "test_qr_codes")
 test_dataset_folder = prepare_folder(timestamp, "test_dataset", True)
-
 generate_qr_images(test_qr_folder, 100, 10//2)
-generate_dataset(test_dataset_folder, "photos", test_qr_folder, 100, (1920//2, 1080//2), 3)
+generate_dataset(test_dataset_folder, "photos", test_qr_folder, 10, (1920//2, 1080//2), 3)
 
 print("output created in: " + base_output_folder)
