@@ -5,3 +5,4 @@ tensorflow
 opencv-python
 qrcode
 tqdm
+keras_cv

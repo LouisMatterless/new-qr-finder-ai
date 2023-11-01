@@ -17,8 +17,7 @@ from tqdm import tqdm
 
 import hashlib
 from datetime import datetime
-from qr_ai_helpers import adjusted_path, create_base_output_folder
-
+from qr_ai_helpers import adjusted_path, get_base_output_folder, prepare_base_output_folder
 
 
 def generate_qr_images(folder, num_images, qr_size):
@@ -224,7 +223,8 @@ def load_and_transform_qr(imgpath):
 
     return random_transform(image, center)
 
-base_output_folder = create_base_output_folder()
+timestamp = prepare_base_output_folder()
+base_output_folder = get_base_output_folder(timestamp)
 
 # Adjust paths for the test folders
 test_qr_folder = adjusted_path("test_qr_codes", base_output_folder)
@@ -235,12 +235,6 @@ if os.path.exists(test_qr_folder):
     shutil.rmtree(test_qr_folder)
 if os.path.exists(test_dataset_folder):
     shutil.rmtree(test_dataset_folder)
-
-# Create the base output folder if it doesn't exist
-if not os.path.exists("outputs"):
-    os.mkdir("outputs")
-if not os.path.exists(base_output_folder):
-    os.mkdir(base_output_folder)
 
 # Create output folders
 os.mkdir(test_qr_folder)
